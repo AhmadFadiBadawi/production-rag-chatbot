@@ -8,6 +8,8 @@ from langchain_chroma import Chroma
 
 from app.embeddings import get_embeddings
 
+from app.settings import settings
+
 
 DATA_DIR = Path("data")
 
@@ -32,17 +34,12 @@ def split_documents(documents):
 
     return chunks
 
-CHROMA_DIR = "chroma_db"
-
 def create_vector_store(chunks):
-
-    vector_db = Chroma.from_documents(
+    return Chroma.from_documents(
         documents=chunks,
         embedding=get_embeddings(),
-        persist_directory=CHROMA_DIR,
+        persist_directory=settings.CHROMA_DIR,
     )
-
-    return vector_db
 
 def ingest():
 
