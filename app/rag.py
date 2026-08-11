@@ -35,6 +35,7 @@ def extract_sources(documents):
         {
             "source": doc.metadata.get("source"),
             "page": doc.metadata.get("page"),
+            "excerpt": doc.page_content[:300],
         }
         for doc in documents
     ]
