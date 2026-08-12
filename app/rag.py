@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 from langchain_chroma import Chroma
 
 from app.embeddings import get_embeddings
@@ -24,9 +28,20 @@ def retrieve_documents(
     question: str,
     k: int | None = None,
 ):
+    logger.info(
+        "Retrieving documents for question"
+    )
+
     retriever = get_retriever(k)
 
-    return retriever.invoke(question)
+    documents = retriever.invoke(question)
+
+    logger.info(
+        "Retrieved %d documents",
+        len(documents),
+    )
+
+    return documents
 
 
 def retrieve_with_scores(

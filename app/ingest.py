@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 from pathlib import Path
 
 from langchain_community.document_loaders import PyPDFLoader
@@ -43,23 +47,27 @@ def create_vector_store(chunks):
 
 def ingest():
 
-    print("Loading documents...")
+    logger.info("Starting document ingestion")
 
     documents = load_documents()
 
-    print(f"{len(documents)} pages loaded.")
-
-    print("Splitting documents...")
+    logger.info(
+        "Loaded %d pages",
+        len(documents),
+    )
 
     chunks = split_documents(documents)
 
-    print(f"{len(chunks)} chunks created.")
+    logger.info(
+        "Created %d chunks",
+        len(chunks),
+    )
 
-    print("Generating embeddings...")
+    logger.info("Generating embeddings")
 
     create_vector_store(chunks)
 
-    print("Done!")
+    logger.info("Document ingestion completed")
 
 if __name__ == "__main__":
     ingest()
