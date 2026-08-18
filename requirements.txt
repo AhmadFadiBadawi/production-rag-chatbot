@@ -1,16 +1,30 @@
-fastapi
-uvicorn[standard]
+# API
+fastapi==0.141.1
+uvicorn==0.52.1
 
-python-dotenv
-pydantic-settings
+# Configuration
+python-dotenv==1.2.2
+pydantic-settings==2.14.2
 
-langchain
-langchain-core
-langchain-text-splitters
-langchain-community
-langchain-chroma
-langchain-google-genai
+# PDF Processing
+pypdf==6.14.2
 
-chromadb
+# LangChain
+langchain==1.3.14
+langchain-core==1.5.3
+langchain-community==0.4.2
+langchain-text-splitters==1.1.2
+langchain-chroma==1.1.0
+langchain-google-genai==4.3.2
 
-pypdf
+# Vector Database
+chromadb==1.5.9
+
+# Google Gemini
+google-genai==2.16.0
+
+# Authentication
+python-jose==3.5.0
+passlib==1.7.4
+bcrypt==4.0.1
+python-multipart==0.0.32

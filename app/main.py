@@ -1,21 +1,36 @@
 import logging
+from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
 
+from app.auth import get_current_user
+from app.auth_routes import router as auth_router
 from app.chat import ask
+from app.database import initialize_database
 from app.ingest import ingest
-from app.models import ChatRequest, ChatResponse
 from app.logging_config import setup_logging
+from app.models import ChatRequest, ChatResponse
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    initialize_database()
+    yield
 
 
 setup_logging()
 
 logger = logging.getLogger(__name__)
 
+
 app = FastAPI(
-    title="Production RAG Chatbot API",
+    title="Production RAG Chatbot",
     version="1.0.0",
+    lifespan=lifespan,
 )
+
+
+app.include_router(auth_router)
 
 
 @app.get("/")
@@ -33,7 +48,7 @@ def health():
     logger.info("Health check requested")
 
     return {
-        "status": "healthy"
+        "status": "healthy",
     }
 
 
@@ -41,7 +56,10 @@ def health():
     "/chat",
     response_model=ChatResponse,
 )
-def chat(request: ChatRequest):
+def chat(
+    request: ChatRequest,
+    current_user=Depends(get_current_user),
+):
     logger.info("Chat request received")
 
     try:
@@ -74,7 +92,9 @@ def chat(request: ChatRequest):
 
 
 @app.post("/ingest")
-def ingest_documents():
+def ingest_documents(
+    current_user=Depends(get_current_user),
+):
     logger.info("Document ingestion requested")
 
     ingest()
@@ -82,5 +102,5 @@ def ingest_documents():
     logger.info("Documents ingested successfully")
 
     return {
-        "message": "Documents ingested successfully."
+        "message": "Documents ingested successfully.",
     }

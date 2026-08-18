@@ -36,6 +36,20 @@ class Settings:
         os.getenv("MAX_OUTPUT_TOKENS", "1024")
     )
 
+    JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", "")
+
+    JWT_ALGORITHM: str = os.getenv(
+        "JWT_ALGORITHM",
+        "HS256",
+    )
+
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = int(
+        os.getenv(
+            "ACCESS_TOKEN_EXPIRE_MINUTES",
+            "60",
+        )
+    )
+
 
 settings = Settings()
 
@@ -43,4 +57,9 @@ settings = Settings()
 if not settings.GOOGLE_API_KEY:
     raise ValueError(
         "GOOGLE_API_KEY is not configured."
+    )
+
+if not settings.JWT_SECRET_KEY:
+    raise ValueError(
+        "JWT_SECRET_KEY is not configured."
     )
